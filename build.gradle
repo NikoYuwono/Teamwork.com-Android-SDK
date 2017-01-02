@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'me.tatarka:gradle-retrolambda:3.4.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+ext.deps = [
+        // sdk
+        okhttp                : 'com.squareup.okhttp3:okhttp:3.5.0',
+        rxjava                : 'io.reactivex:rxjava:1.2.4',
+        gson                  : 'com.google.code.gson:gson:2.8.0',
+
+        // Test dependencies
+        junit                 : 'junit:junit:4.12',
+        mockito               : 'org.mockito:mockito-all:1.10.19',
+        compiletesting        : 'com.google.testing.compile:compile-testing:0.7',
+        roboelectric          : 'org.robolectric:robolectric:3.1.2',
+        robolectric_support   : 'org.robolectric:shadows-support-v4:3.1.2',
+        equalsverifier        : 'nl.jqno.equalsverifier:equalsverifier:2.1.8'
+]
