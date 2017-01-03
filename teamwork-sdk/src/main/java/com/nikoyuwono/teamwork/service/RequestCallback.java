@@ -1,7 +1,8 @@
 package com.nikoyuwono.teamwork.service;
 
-public interface BaseCallback {
+public interface RequestCallback<T> {
 
+    void onGetContent(T content);
     void onError(Exception e);
 
 }

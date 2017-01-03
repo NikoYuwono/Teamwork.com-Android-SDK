@@ -259,4 +259,24 @@ public class Milestone {
             return new Milestone(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", createdOn='" + createdOn + '\'' +
+                ", creatorId='" + creatorId + '\'' +
+                ", commentsCount='" + commentsCount + '\'' +
+                ", completedOn='" + completedOn + '\'' +
+                ", deadline='" + deadline + '\'' +
+                ", completed=" + completed +
+                ", completerId='" + completerId + '\'' +
+                ", responsiblePartyIds='" + responsiblePartyIds + '\'' +
+                ", responsiblePartyNames='" + responsiblePartyNames + '\'' +
+                ", reminder=" + reminder +
+                ", privateAccess=" + privateAccess +
+                '}';
+    }
 }

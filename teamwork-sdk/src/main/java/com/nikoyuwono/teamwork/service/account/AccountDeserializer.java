@@ -14,6 +14,5 @@ public class AccountDeserializer implements JsonDeserializer<Account> {
     public Account deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
         JsonElement content = je.getAsJsonObject().get("account");
         return new Gson().fromJson(content, Account.class);
-
     }
 }

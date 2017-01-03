@@ -225,4 +225,22 @@ public class Comment {
             return new Comment(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", commentableType='" + commentableType + '\'' +
+                ", body='" + body + '\'' +
+                ", authorId='" + authorId + '\'' +
+                ", authorFirstname='" + authorFirstname + '\'' +
+                ", authorLastname='" + authorLastname + '\'' +
+                ", authorAvatarUrl='" + authorAvatarUrl + '\'' +
+                ", commentableId='" + commentableId + '\'' +
+                ", attachmentsCount='" + attachmentsCount + '\'' +
+                ", emailedFrom='" + emailedFrom + '\'' +
+                ", datetime='" + datetime + '\'' +
+                ", privateAccess=" + privateAccess +
+                '}';
+    }
 }

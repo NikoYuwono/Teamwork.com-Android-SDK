@@ -259,4 +259,24 @@ public class Message {
             return new Message(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", authorId='" + authorId + '\'' +
+                ", authorFirstName='" + authorFirstName + '\'' +
+                ", authorLastName='" + authorLastName + '\'' +
+                ", authorAvatarUrl='" + authorAvatarUrl + '\'' +
+                ", body='" + body + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", postedOn='" + postedOn + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", commentsCount='" + commentsCount + '\'' +
+                ", attachmentsCount='" + attachmentsCount + '\'' +
+                ", displayBody='" + displayBody + '\'' +
+                ", privateAccess=" + privateAccess +
+                '}';
+    }
 }

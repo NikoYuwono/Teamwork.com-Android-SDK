@@ -94,6 +94,30 @@ public class ApiClient {
             execute(this.createGetRequest(), callback);
         }
 
+        public Observable<Response> post() {
+            return execute(this.createPostRequest());
+        }
+
+        public void post(final Callback callback) {
+            execute(this.createPostRequest(), callback);
+        }
+
+        public Observable<Response> put() {
+            return execute(this.createPutRequest());
+        }
+
+        public void put(final Callback callback) {
+            execute(this.createPutRequest(), callback);
+        }
+
+        public Observable<Response> delete() {
+            return execute(this.createDeleteRequest());
+        }
+
+        public void delete(final Callback callback) {
+            execute(this.createDeleteRequest(), callback);
+        }
+
         private Request createGetRequest() {
             return new Request.Builder()
                     .url(buildRequestUrlWithQueryParameter())

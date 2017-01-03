@@ -90,12 +90,17 @@ public class Person {
         return new Builder();
     }
 
-    static class Permissions {
+    public static class Permissions {
 
         @SerializedName("can-manage-people")
         private boolean canManagePeople;
         @SerializedName("can-add-projects")
         private boolean canAddProjects;
+
+        public Permissions(boolean canManagePeople, boolean canAddProjects) {
+            this.canManagePeople = canManagePeople;
+            this.canAddProjects = canAddProjects;
+        }
 
         public boolean isCanManagePeople() {
             return canManagePeople;
@@ -486,5 +491,37 @@ public class Person {
         public Person build() {
             return new Person(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id='" + id + '\'' +
+                ", userType='" + userType + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", title='" + title + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", imHandle='" + imHandle + '\'' +
+                ", imService='" + imService + '\'' +
+                ", notes='" + notes + '\'' +
+                ", phoneNumberOffice='" + phoneNumberOffice + '\'' +
+                ", phoneNumberOfficeExt='" + phoneNumberOfficeExt + '\'' +
+                ", phoneNumberMobile='" + phoneNumberMobile + '\'' +
+                ", phoneNumberHome='" + phoneNumberHome + '\'' +
+                ", phoneNumberFax='" + phoneNumberFax + '\'' +
+                ", lastLogin='" + lastLogin + '\'' +
+                ", companyId='" + companyId + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", inOwnerCompany='" + inOwnerCompany + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", lastChangedOn='" + lastChangedOn + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", userName='" + userName + '\'' +
+                ", deleted=" + deleted +
+                ", hasAccessToNewProjects=" + hasAccessToNewProjects +
+                ", administrator=" + administrator +
+                ", permissions=" + permissions +
+                '}';
     }
 }

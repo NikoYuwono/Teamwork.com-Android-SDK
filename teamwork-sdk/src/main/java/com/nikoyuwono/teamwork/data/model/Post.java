@@ -225,4 +225,22 @@ public class Post {
             return new Post(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", authorId='" + authorId + '\'' +
+                ", useTextile=" + useTextile +
+                ", milestoneId='" + milestoneId + '\'' +
+                ", postedOn='" + postedOn + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", commentsCount='" + commentsCount + '\'' +
+                ", attachmentsCount='" + attachmentsCount + '\'' +
+                ", privateAccess=" + privateAccess +
+                '}';
+    }
 }

@@ -310,4 +310,27 @@ public class Notebook {
             return new Notebook(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Notebook{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", content='" + content + '\'' +
+                ", privateAccess='" + privateAccess + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", categoryName='" + categoryName + '\'' +
+                ", createdDate='" + createdDate + '\'' +
+                ", createdByUserId='" + createdByUserId + '\'' +
+                ", createdByUserfirstname='" + createdByUserfirstname + '\'' +
+                ", createdByUserlastname='" + createdByUserlastname + '\'' +
+                ", locked='" + locked + '\'' +
+                ", lockedDate='" + lockedDate + '\'' +
+                ", lockedByUserid='" + lockedByUserid + '\'' +
+                ", lockedByUserfirstname='" + lockedByUserfirstname + '\'' +
+                ", lockedByUserlastname='" + lockedByUserlastname + '\'' +
+                ", projectId='" + projectId + '\'' +
+                '}';
+    }
 }

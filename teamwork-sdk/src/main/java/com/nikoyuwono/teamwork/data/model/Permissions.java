@@ -344,4 +344,29 @@ public class Permissions {
             return new Permissions(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Permissions{" +
+                "viewMessagesAndFiles='" + viewMessagesAndFiles + '\'' +
+                ", viewTasksAndMilestones='" + viewTasksAndMilestones + '\'' +
+                ", viewTime='" + viewTime + '\'' +
+                ", viewNotebooks='" + viewNotebooks + '\'' +
+                ", viewRiskRegister='" + viewRiskRegister + '\'' +
+                ", viewInvoices='" + viewInvoices + '\'' +
+                ", viewLinks='" + viewLinks + '\'' +
+                ", addTasks='" + addTasks + '\'' +
+                ", addMilestones='" + addMilestones + '\'' +
+                ", addTaskLists='" + addTaskLists + '\'' +
+                ", addMessages='" + addMessages + '\'' +
+                ", addFiles='" + addFiles + '\'' +
+                ", addTime='" + addTime + '\'' +
+                ", addNotebooks='" + addNotebooks + '\'' +
+                ", addLinks='" + addLinks + '\'' +
+                ", setPrivacy='" + setPrivacy + '\'' +
+                ", canBeAssignedToTasksAndMilestones='" + canBeAssignedToTasksAndMilestones + '\'' +
+                ", projectAdministrator='" + projectAdministrator + '\'' +
+                ", addPeopleToProject='" + addPeopleToProject + '\'' +
+                '}';
+    }
 }

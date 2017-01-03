@@ -3,6 +3,7 @@ package com.nikoyuwono.teamwork.service.account;
 import com.google.gson.Gson;
 import com.nikoyuwono.teamwork.data.model.Account;
 import com.nikoyuwono.teamwork.data.net.ApiClient;
+import com.nikoyuwono.teamwork.service.RequestCallback;
 import com.nikoyuwono.teamwork.service.Util;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void getAccountDetails(AccountCallback accountCallback) {
+    public void getAccountDetails(RequestCallback<Account> accountCallback) {
         createAccountCall(GET_ACCOUNT_DETAILS_URL_PATH, accountCallback);
     }
 
@@ -36,7 +37,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void authenticate(AccountCallback accountCallback) {
+    public void authenticate(RequestCallback<Account> accountCallback) {
         createAccountCall(AUTHENTICATE_URL_PATH, accountCallback);
     }
 
@@ -45,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
         return createAccountCall(AUTHENTICATE_URL_PATH);
     }
 
-    private void createAccountCall(final String path, final AccountCallback accountCallback) {
+    private void createAccountCall(final String path, final RequestCallback<Account> accountCallback) {
         apiClient.withPath(path).get(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -56,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
             public void onResponse(Call call, Response response) throws IOException {
                 final String content = response.body().string();
                 final Account account = gson.fromJson(content, Account.class);
-                accountCallback.onGetAccount(account);
+                accountCallback.onGetContent(account);
             }
         });
     }

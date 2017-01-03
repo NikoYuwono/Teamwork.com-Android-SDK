@@ -242,4 +242,23 @@ public class Company {
             return new Company(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id='" + id + '\'' +
+                ", canSeePrivate=" + canSeePrivate +
+                ", companyNameUrl='" + companyNameUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", addressOne='" + addressOne + '\'' +
+                ", addressTwo='" + addressTwo + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip='" + zip + '\'' +
+                ", country='" + country + '\'' +
+                ", website='" + website + '\'' +
+                ", phone='" + phone + '\'' +
+                ", fax='" + fax + '\'' +
+                '}';
+    }
 }

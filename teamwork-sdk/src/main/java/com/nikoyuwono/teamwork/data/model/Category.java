@@ -123,4 +123,16 @@ public class Category {
             return new Category(this);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id='" + id + '\'' +
+                ", elementsCount='" + elementsCount + '\'' +
+                ", name='" + name + '\'' +
+                ", projectId='" + projectId + '\'' +
+                ", type='" + type + '\'' +
+                ", parentId='" + parentId + '\'' +
+                '}';
+    }
 }
