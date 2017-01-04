@@ -1,5 +1,7 @@
 package com.nikoyuwono.teamwork.service.account;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.nikoyuwono.teamwork.data.model.Account;
 import com.nikoyuwono.teamwork.data.net.ApiClient;
@@ -27,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void getAccountDetails(RequestCallback<Account> accountCallback) {
+    public void getAccountDetails(@Nullable RequestCallback<Account> accountCallback) {
         createAccountCall(GET_ACCOUNT_DETAILS_URL_PATH, accountCallback);
     }
 
@@ -37,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void authenticate(RequestCallback<Account> accountCallback) {
+    public void authenticate(@Nullable RequestCallback<Account> accountCallback) {
         createAccountCall(AUTHENTICATE_URL_PATH, accountCallback);
     }
 

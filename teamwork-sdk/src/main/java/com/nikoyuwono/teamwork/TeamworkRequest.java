@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nikoyuwono.teamwork.data.model.Account;
 import com.nikoyuwono.teamwork.data.net.ApiClient;
-import com.nikoyuwono.teamwork.service.account.AccountCallback;
+import com.nikoyuwono.teamwork.service.RequestCallback;
 import com.nikoyuwono.teamwork.service.account.AccountDeserializer;
 import com.nikoyuwono.teamwork.service.account.AccountService;
 import com.nikoyuwono.teamwork.service.account.AccountServiceImpl;
@@ -21,7 +21,7 @@ public final class TeamworkRequest {
 
     static void initialize(final OkHttpClient okHttpClient, final String baseUrl) {
         final ApiClient apiClient = new ApiClient.Builder()
-                .baseUrl(baseUrl)
+                .host(baseUrl)
                 .okHttpClient(okHttpClient)
                 .build();
         final Gson gson = new GsonBuilder()
@@ -36,9 +36,9 @@ public final class TeamworkRequest {
         this.gson = gson;
     }
 
-    public static void newGetAccountDetailsRequest(AccountCallback accountCallback) {
+    public static void newGetAccountDetailsRequest(RequestCallback<Account> callback) {
         final AccountService accountService = new AccountServiceImpl(instance.apiClient, instance.gson);
-        accountService.getAccountDetails(accountCallback);
+        accountService.getAccountDetails(callback);
     }
 
     public static Observable<Account> newGetAccountDetailsRequest() {
@@ -46,9 +46,9 @@ public final class TeamworkRequest {
                 .getAccountDetails();
     }
 
-    public static void newAuthenticateRequest(AccountCallback accountCallback) {
+    public static void newAuthenticateRequest(RequestCallback<Account> callback) {
         final AccountService accountService = new AccountServiceImpl(instance.apiClient, instance.gson);
-        accountService.authenticate(accountCallback);
+        accountService.authenticate(callback);
     }
 
     public static Observable<Account> newAuthenticateRequest() {

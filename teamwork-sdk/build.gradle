@@ -30,4 +30,9 @@ dependencies {
     compile deps.okhttp
     compile deps.rxjava
     compile deps.gson
+    compile deps.supportAnnotation
+
+    testCompile deps.junit
+    testCompile deps.okhttpMockWebserver
+    testCompile deps.assertj
 }

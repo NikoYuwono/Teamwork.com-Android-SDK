@@ -1,5 +1,7 @@
 package com.nikoyuwono.teamwork.service.account;
 
+import android.support.annotation.Nullable;
+
 import com.nikoyuwono.teamwork.data.model.Account;
 import com.nikoyuwono.teamwork.service.RequestCallback;
 
@@ -7,8 +9,8 @@ import rx.Observable;
 
 public interface AccountService {
 
-    void getAccountDetails(RequestCallback<Account> accountCallback);
+    void getAccountDetails(@Nullable RequestCallback<Account> accountCallback);
     Observable<Account> getAccountDetails();
-    void authenticate(RequestCallback<Account> accountCallback);
+    void authenticate(@Nullable RequestCallback<Account> accountCallback);
     Observable<Account> authenticate();
 }

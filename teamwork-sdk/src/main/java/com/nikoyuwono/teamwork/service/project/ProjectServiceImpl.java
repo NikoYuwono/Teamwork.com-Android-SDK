@@ -1,5 +1,7 @@
 package com.nikoyuwono.teamwork.service.project;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -42,71 +44,83 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void createProject(NewProject newProject, RequestCallback<Response> callback) {
+    public void createProject(@NonNull NewProject newProject, @Nullable RequestCallback<Response> callback) {
         apiClient.withPath(PROJECTS_URL_PATH)
                 .jsonBody(gson.toJson(newProject))
                 .post(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        callback.onGetContent(response);
+                        if (callback != null) {
+                            callback.onGetContent(response);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Response> createProject(NewProject newProject) {
+    public Observable<Response> createProject(@NonNull NewProject newProject) {
         return apiClient.withPath(PROJECTS_URL_PATH)
                 .jsonBody(gson.toJson(newProject))
                 .post();
     }
 
     @Override
-    public void updateProject(String projectId, NewProject newProject, RequestCallback<Response> callback) {
+    public void updateProject(@NonNull String projectId, @NonNull NewProject newProject, RequestCallback<Response> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .jsonBody(gson.toJson(newProject))
                 .put(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        callback.onGetContent(response);
+                        if (callback != null) {
+                            callback.onGetContent(response);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Response> updateProject(String projectId, NewProject newProject) {
+    public Observable<Response> updateProject(@NonNull String projectId, @NonNull NewProject newProject) {
         return apiClient.withPath(projectsUrlPath(projectId))
                 .jsonBody(gson.toJson(newProject))
                 .put();
     }
 
     @Override
-    public void deleteProject(String projectId, RequestCallback<Response> callback) {
+    public void deleteProject(@NonNull String projectId, RequestCallback<Response> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .delete(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        callback.onGetContent(response);
+                        if (callback != null) {
+                            callback.onGetContent(response);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Response> deleteProject(String projectId) {
+    public Observable<Response> deleteProject(@NonNull String projectId) {
         return apiClient.withPath(projectsUrlPath(projectId))
                 .delete();
     }
@@ -117,14 +131,18 @@ public class ProjectServiceImpl implements ProjectService {
                 .get(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        final String content = response.body().string();
-                        final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
-                        callback.onGetContent(projects);
+                        if (callback != null) {
+                            final String content = response.body().string();
+                            final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
+                            callback.onGetContent(projects);
+                        }
                     }
                 });
     }
@@ -143,14 +161,18 @@ public class ProjectServiceImpl implements ProjectService {
                 .get(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        final String content = response.body().string();
-                        final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
-                        callback.onGetContent(projects);
+                        if (callback != null) {
+                            final String content = response.body().string();
+                            final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
+                            callback.onGetContent(projects);
+                        }
                     }
                 });
     }
@@ -164,26 +186,30 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getProject(String projectId, boolean includePeople, RequestCallback<Project> callback) {
+    public void getProject(@NonNull String projectId, boolean includePeople, RequestCallback<Project> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .param("includePeople", includePeople)
                 .get(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        final String content = response.body().string();
-                        final Project projects = gson.fromJson(content, Project.class);
-                        callback.onGetContent(projects);
+                        if (callback != null) {
+                            final String content = response.body().string();
+                            final Project projects = gson.fromJson(content, Project.class);
+                            callback.onGetContent(projects);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Project> getProject(String projectId, boolean includePeople) {
+    public Observable<Project> getProject(@NonNull String projectId, boolean includePeople) {
         return apiClient.withPath(projectsUrlPath(projectId))
                 .param("includePeople", includePeople)
                 .get()
@@ -192,25 +218,29 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getCompanyProjects(String companyId, RequestCallback<List<Project>> callback) {
+    public void getCompanyProjects(@NonNull String companyId, RequestCallback<List<Project>> callback) {
         apiClient.withPath(String.format(COMPANY_PROJECTS_URL_PATH, companyId))
                 .get(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        final String content = response.body().string();
-                        final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
-                        callback.onGetContent(projects);
+                        if (callback != null) {
+                            final String content = response.body().string();
+                            final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
+                            callback.onGetContent(projects);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<List<Project>> getCompanyProjects(String companyId) {
+    public Observable<List<Project>> getCompanyProjects(@NonNull String companyId) {
         return apiClient.withPath(String.format(COMPANY_PROJECTS_URL_PATH, companyId))
                 .get()
                 .map(Util::getContent)
@@ -223,14 +253,18 @@ public class ProjectServiceImpl implements ProjectService {
                 .get(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        final String content = response.body().string();
-                        final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
-                        callback.onGetContent(projects);
+                        if (callback != null) {
+                            final String content = response.body().string();
+                            final List<Project> projects = gson.fromJson(content, PROJECT_LIST_TYPE);
+                            callback.onGetContent(projects);
+                        }
                     }
                 });
     }
@@ -244,53 +278,65 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void starProject(String projectId, RequestCallback<Response> callback) {
+    public void starProject(@NonNull String projectId, RequestCallback<Response> callback) {
         apiClient.withPath(String.format(STAR_A_PROJECT_URL_PATH, projectId))
                 .put(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        callback.onGetContent(response);
+                        if (callback != null) {
+                            callback.onGetContent(response);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Response> starProject(String projectId) {
+    public Observable<Response> starProject(@NonNull String projectId) {
         return apiClient.withPath(String.format(STAR_A_PROJECT_URL_PATH, projectId)).put();
     }
 
     @Override
-    public void unstarProject(String projectId, RequestCallback<Response> callback) {
+    public void unstarProject(@NonNull String projectId, RequestCallback<Response> callback) {
         apiClient.withPath(String.format(UNSTAR_A_PROJECT_URL_PATH, projectId))
                 .put(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        callback.onError(e);
+                        if (callback != null) {
+                            callback.onError(e);
+                        }
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        callback.onGetContent(response);
+                        if (callback != null) {
+                            callback.onGetContent(response);
+                        }
                     }
                 });
     }
 
     @Override
-    public Observable<Response> unstarProject(String projectId) {
+    public Observable<Response> unstarProject(@NonNull String projectId) {
         return apiClient.withPath(String.format(UNSTAR_A_PROJECT_URL_PATH, projectId)).put();
     }
 
-    private String projectsUrlPath(String projectId) {
+    private String projectsUrlPath(@NonNull String projectId) {
         return String.format(PROJECTS_WITH_ID_URL_PATH, projectId);
     }
 
-    private ApiClient.Executor createGetAllProjectsExecutor(GetProjectParameter getProjectParameter) {
+    private ApiClient.Executor createGetAllProjectsExecutor(@Nullable GetProjectParameter getProjectParameter) {
         final ApiClient.Executor executor = apiClient.withPath(PROJECTS_URL_PATH);
+
+        if (getProjectParameter == null) {
+            return executor;
+        }
 
         final ProjectStatus projectStatus = getProjectParameter.getProjectStatus();
         if (projectStatus != null) {

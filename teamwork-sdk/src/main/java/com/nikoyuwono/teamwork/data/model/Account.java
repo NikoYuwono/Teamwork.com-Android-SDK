@@ -27,7 +27,7 @@ public class Account {
     @SerializedName("id")
     private String id;
     @SerializedName("URL")
-    private String uRL;
+    private String url;
     @SerializedName("email-notification-enabled")
     private boolean emailNotificationEnabled;
     @SerializedName("companyid")
@@ -49,7 +49,7 @@ public class Account {
         setAccountHolderId(builder.accountHolderId);
         setLogo(builder.logo);
         setId(builder.id);
-        setuRL(builder.uRL);
+        setUrl(builder.url);
         setEmailNotificationEnabled(builder.emailNotificationEnabled);
         setCompanyId(builder.companyId);
         setLang(builder.lang);
@@ -148,12 +148,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getuRL() {
-        return uRL;
+    public String getUrl() {
+        return url;
     }
 
-    public void setuRL(String uRL) {
-        this.uRL = uRL;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public boolean isEmailNotificationEnabled() {
@@ -200,7 +200,7 @@ public class Account {
         private String accountHolderId;
         private String logo;
         private String id;
-        private String uRL;
+        private String url;
         private boolean emailNotificationEnabled;
         private String companyId;
         private String lang;
@@ -264,8 +264,8 @@ public class Account {
             return this;
         }
 
-        public Builder uRL(String uRL) {
-            this.uRL = uRL;
+        public Builder url(String url) {
+            this.url = url;
             return this;
         }
 
@@ -308,7 +308,7 @@ public class Account {
                 ", accountHolderId='" + accountHolderId + '\'' +
                 ", logo='" + logo + '\'' +
                 ", id='" + id + '\'' +
-                ", uRL='" + uRL + '\'' +
+                ", url='" + url + '\'' +
                 ", emailNotificationEnabled=" + emailNotificationEnabled +
                 ", companyId='" + companyId + '\'' +
                 ", lang='" + lang + '\'' +

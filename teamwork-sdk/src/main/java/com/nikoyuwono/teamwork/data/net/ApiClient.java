@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -20,28 +21,37 @@ public class ApiClient {
     private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json; charset=utf-8";
 
     private final OkHttpClient okHttpClient;
-    private final String baseUrl;
-
-    private ApiClient(OkHttpClient okHttpClient, String baseUrl) {
-        this.okHttpClient = okHttpClient;
-        this.baseUrl = baseUrl;
-    }
+    private final String host;
+    private final HttpUrl baseUrl;
 
     private ApiClient(Builder builder) {
         this.okHttpClient = builder.okHttpClient;
+        this.host = builder.host;
         this.baseUrl = builder.baseUrl;
     }
 
     public Executor withPath(final String path) {
-        return new Executor(this, baseUrl, path);
+        if (baseUrl != null) {
+            return new Executor(this, baseUrl, path);
+        } else {
+            return new Executor(this, host, path);
+        }
     }
 
     public static final class Builder {
 
         private OkHttpClient okHttpClient;
-        private String baseUrl;
+        private String host;
+        private HttpUrl baseUrl;
 
         public ApiClient build() {
+            if (okHttpClient == null)  {
+                throw new IllegalArgumentException("Please set an OkHttpClient in order to build an ApiClient");
+            }
+
+            if (baseUrl == null && host == null) {
+                throw new IllegalArgumentException("No Base URL or Host specified, please set a Base URL or a Host");
+            }
             return new ApiClient(this);
         }
 
@@ -50,8 +60,13 @@ public class ApiClient {
             return this;
         }
 
-        public Builder baseUrl(String baseUrl) {
+        public Builder baseUrl(HttpUrl baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder host(String host) {
+            this.host = host;
             return this;
         }
     }
@@ -65,6 +80,14 @@ public class ApiClient {
         private final Map<String, String> parameters = new HashMap<>();
 
         private RequestBody requestBody;
+
+        Executor(final ApiClient apiClient,
+                 final HttpUrl httpUrl,
+                 final String path) {
+            this.apiClient = apiClient;
+            this.urlBuilder = httpUrl.newBuilder()
+                    .addPathSegment(path);
+        }
 
         Executor(final ApiClient apiClient,
                  final String baseUrl,
@@ -164,6 +187,11 @@ public class ApiClient {
             return Observable.<Response>create(subscriber -> {
                 try {
                     final Response response = apiClient.okHttpClient.newCall(request).execute();
+
+                    if (!response.isSuccessful()) {
+                        throw createExceptionFromResponse(response);
+                    }
+
                     subscriber.onNext(response);
                     subscriber.onCompleted();
                 } catch (IOException e) {
@@ -173,7 +201,39 @@ public class ApiClient {
         }
 
         private void execute(final Request request, Callback callback) {
-            apiClient.okHttpClient.newCall(request).enqueue(callback);
+            apiClient.okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    callback.onFailure(call, e);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        callback.onResponse(call, response);
+                    } else {
+                        callback.onFailure(call, createExceptionFromResponse(response));
+                    }
+                }
+            });
+        }
+
+        private IOException createExceptionFromResponse(Response response) {
+            final String errorName = isClientError(response.code()) ? "Client error" : "Server error";
+            return new IOException(errorName + " occurred with Response code : "
+                    + response.code()
+                    + ", message : "
+                    + response.message()
+                    + ", for url : "
+                    + response.request().url());
+        }
+
+        private boolean isClientError(int responseCode) {
+            return responseCode >= 400 && responseCode < 500;
+        }
+
+        private boolean isServerError(int responseCode) {
+            return responseCode >= 500 && responseCode < 600;
         }
     }
 

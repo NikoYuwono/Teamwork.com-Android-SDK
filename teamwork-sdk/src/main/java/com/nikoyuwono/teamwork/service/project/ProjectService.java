@@ -1,5 +1,8 @@
 package com.nikoyuwono.teamwork.service.project;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.nikoyuwono.teamwork.data.model.GetProjectParameter;
 import com.nikoyuwono.teamwork.data.model.NewProject;
 import com.nikoyuwono.teamwork.data.model.Project;
@@ -12,34 +15,34 @@ import rx.Observable;
 
 public interface ProjectService {
 
-    void createProject(NewProject newProject, RequestCallback<Response> callback);
-    Observable<Response> createProject(NewProject newProject);
+    void createProject(@NonNull NewProject newProject, @Nullable RequestCallback<Response> callback);
+    Observable<Response> createProject(@NonNull NewProject newProject);
 
-    void updateProject(String projectId, NewProject newProject, RequestCallback<Response> callback);
-    Observable<Response> updateProject(String projectId, NewProject newProject);
+    void updateProject(@NonNull String projectId, @NonNull NewProject newProject, @Nullable RequestCallback<Response> callback);
+    Observable<Response> updateProject(@NonNull String projectId, @NonNull NewProject newProject);
 
-    void deleteProject(String projectId, RequestCallback<Response> callback);
-    Observable<Response> deleteProject(String projectId);
+    void deleteProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback);
+    Observable<Response> deleteProject(@NonNull String projectId);
 
-    void getAllProjects(RequestCallback<List<Project>> callback);
+    void getAllProjects(@Nullable RequestCallback<List<Project>> callback);
     Observable<List<Project>> getAllProjects();
 
-    void getAllProjects(GetProjectParameter getProjectParameter, RequestCallback<List<Project>> callback);
-    Observable<List<Project>> getAllProjects(GetProjectParameter getProjectParameter);
+    void getAllProjects(@Nullable GetProjectParameter getProjectParameter, @Nullable RequestCallback<List<Project>> callback);
+    Observable<List<Project>> getAllProjects(@Nullable GetProjectParameter getProjectParameter);
 
-    void getProject(String projectId, boolean includePeople, RequestCallback<Project> callback);
-    Observable<Project> getProject(String projectId, boolean includePeople);
+    void getProject(@NonNull String projectId, boolean includePeople, @Nullable RequestCallback<Project> callback);
+    Observable<Project> getProject(@NonNull String projectId, boolean includePeople);
 
-    void getCompanyProjects(String companyId, RequestCallback<List<Project>> callback);
-    Observable<List<Project>> getCompanyProjects(String companyId);
+    void getCompanyProjects(@NonNull String companyId, @Nullable RequestCallback<List<Project>> callback);
+    Observable<List<Project>> getCompanyProjects(@NonNull String companyId);
 
-    void getStarredProjects(RequestCallback<List<Project>> callback);
+    void getStarredProjects(@Nullable RequestCallback<List<Project>> callback);
     Observable<List<Project>> getStarredProjects();
 
-    void starProject(String projectId, RequestCallback<Response> callback);
-    Observable<Response> starProject(String projectId);
+    void starProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback);
+    Observable<Response> starProject(@NonNull String projectId);
 
-    void unstarProject(String projectId, RequestCallback<Response> callback);
-    Observable<Response> unstarProject(String projectId);
+    void unstarProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback);
+    Observable<Response> unstarProject(@NonNull String projectId);
 
 }
