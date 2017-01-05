@@ -15,7 +15,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import rx.Observable;
 
-public class AccountServiceImpl implements AccountService {
+class AccountServiceImpl implements AccountService {
 
     private static final String GET_ACCOUNT_DETAILS_URL_PATH = "account.json";
     private static final String AUTHENTICATE_URL_PATH = "authenticate.json";

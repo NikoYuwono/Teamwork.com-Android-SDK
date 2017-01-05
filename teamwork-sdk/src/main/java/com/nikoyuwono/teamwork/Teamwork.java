@@ -2,6 +2,10 @@ package com.nikoyuwono.teamwork;
 
 import android.content.Context;
 
+import com.nikoyuwono.teamwork.data.net.ApiClient;
+import com.nikoyuwono.teamwork.service.account.AccountRequest;
+import com.nikoyuwono.teamwork.service.project.ProjectRequest;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -9,14 +13,19 @@ import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 
-public class Teamwork {
+public final class Teamwork {
+
+    private static ApiClient apiClient;
 
     public static void initialize(final Context context,
                                   final String apiKey,
                                   final String baseUrl) {
         final Cache cache = createCache(context.getCacheDir());
         final OkHttpClient okHttpClient = createOkHttpClient(cache, apiKey);
-        TeamworkRequest.initialize(okHttpClient, baseUrl);
+        apiClient = new ApiClient.Builder()
+                .host(baseUrl)
+                .okHttpClient(okHttpClient)
+                .build();
     }
 
     private static Cache createCache(final File cacheDir) {
@@ -41,4 +50,15 @@ public class Teamwork {
                 .build();
     }
 
+    public static AccountRequest accountRequest() {
+        final AccountRequest accountRequest = AccountRequest.getInstance();
+        accountRequest.init(apiClient);
+        return accountRequest;
+    }
+
+    public static ProjectRequest projectRequest() {
+        final ProjectRequest projectRequest = ProjectRequest.getInstance();
+        projectRequest.init(apiClient);
+        return projectRequest;
+    }
 }

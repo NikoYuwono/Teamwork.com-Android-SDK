@@ -16,7 +16,6 @@ import com.nikoyuwono.teamwork.service.Util;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -24,7 +23,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import rx.Observable;
 
-public class ProjectServiceImpl implements ProjectService {
+class ProjectServiceImpl implements ProjectService {
 
     private static final String PROJECTS_URL_PATH = "projects.json";
     private static final String PROJECTS_WITH_ID_URL_PATH = "projects/%s.json";
@@ -33,12 +32,12 @@ public class ProjectServiceImpl implements ProjectService {
     private static final String STAR_A_PROJECT_URL_PATH = "/projects/%s/star.json";
     private static final String UNSTAR_A_PROJECT_URL_PATH = "/projects/%s/unstar.json";
 
-    private static final Type PROJECT_LIST_TYPE = new TypeToken<ArrayList<Project>>() {}.getType();
+    private static final Type PROJECT_LIST_TYPE = new TypeToken<List<Project>>() {}.getType();
 
     private final ApiClient apiClient;
     private final Gson gson;
 
-    public ProjectServiceImpl(ApiClient apiClient, Gson gson) {
+    ProjectServiceImpl(ApiClient apiClient, Gson gson) {
         this.apiClient = apiClient;
         this.gson = gson;
     }

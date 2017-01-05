@@ -7,7 +7,7 @@ import com.nikoyuwono.teamwork.service.RequestCallback;
 
 import rx.Observable;
 
-public interface AccountService {
+interface AccountService {
 
     void getAccountDetails(@Nullable RequestCallback<Account> accountCallback);
     Observable<Account> getAccountDetails();

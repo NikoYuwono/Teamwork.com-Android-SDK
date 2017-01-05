@@ -13,7 +13,7 @@ import java.util.List;
 import okhttp3.Response;
 import rx.Observable;
 
-public interface ProjectService {
+interface ProjectService {
 
     void createProject(@NonNull NewProject newProject, @Nullable RequestCallback<Response> callback);
     Observable<Response> createProject(@NonNull NewProject newProject);
