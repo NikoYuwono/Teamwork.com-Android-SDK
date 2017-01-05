@@ -86,17 +86,17 @@ public class ApiClient {
                  final String path) {
             this.apiClient = apiClient;
             this.urlBuilder = httpUrl.newBuilder()
-                    .addPathSegment(path);
+                    .encodedPath(path);
         }
 
         Executor(final ApiClient apiClient,
-                 final String baseUrl,
+                 final String host,
                  final String path) {
             this.apiClient = apiClient;
             this.urlBuilder = new HttpUrl.Builder()
                     .scheme("https")
-                    .host(baseUrl)
-                    .addPathSegment(path);
+                    .host(host)
+                    .encodedPath(path);
         }
 
         public <T> Executor param(final String key, final T value) {

@@ -1,6 +1,7 @@
 package com.nikoyuwono.teamwork.service.account;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
 import com.nikoyuwono.teamwork.data.model.Account;
@@ -17,8 +18,10 @@ import rx.Observable;
 
 class AccountServiceImpl implements AccountService {
 
-    private static final String GET_ACCOUNT_DETAILS_URL_PATH = "account.json";
-    private static final String AUTHENTICATE_URL_PATH = "authenticate.json";
+    @VisibleForTesting
+    static final String GET_ACCOUNT_DETAILS_URL_PATH = "/account.json";
+    @VisibleForTesting
+    static final String AUTHENTICATE_URL_PATH = "/authenticate.json";
 
     private final ApiClient apiClient;
     private final Gson gson;

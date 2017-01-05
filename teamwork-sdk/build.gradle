@@ -33,6 +33,7 @@ dependencies {
     compile deps.supportAnnotation
 
     testCompile deps.junit
-    testCompile deps.okhttpMockWebserver
     testCompile deps.assertj
+    testCompile deps.mockito
+    testCompile deps.okhttpMockWebserver
 }

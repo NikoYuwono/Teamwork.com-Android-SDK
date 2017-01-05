@@ -17,6 +17,10 @@ public final class Teamwork {
 
     private static ApiClient apiClient;
 
+    private Teamwork() {
+        throw new IllegalAccessError("This constructor shouldn't be called!");
+    }
+
     public static void initialize(final Context context,
                                   final String apiKey,
                                   final String baseUrl) {

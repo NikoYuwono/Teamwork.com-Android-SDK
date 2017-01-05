@@ -7,6 +7,7 @@ import com.nikoyuwono.teamwork.data.net.ApiClient;
 import com.nikoyuwono.teamwork.service.BaseRequest;
 import com.nikoyuwono.teamwork.service.RequestCallback;
 
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import rx.Observable;
@@ -26,6 +27,8 @@ public final class ProjectRequest extends BaseRequest<ProjectService> {
             throw new IllegalStateException("Already instantiated");
         }
         this.gson = new GsonBuilder()
+                .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                .serializeNulls()
                 .registerTypeAdapter(Project.class, new ProjectDeserializer())
                 .registerTypeAdapter(new TypeToken<List<Project>>(){}.getType(), new ProjectsDeserializer())
                 .create();

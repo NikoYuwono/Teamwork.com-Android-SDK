@@ -25,12 +25,12 @@ import rx.Observable;
 
 class ProjectServiceImpl implements ProjectService {
 
-    private static final String PROJECTS_URL_PATH = "projects.json";
-    private static final String PROJECTS_WITH_ID_URL_PATH = "projects/%s.json";
-    private static final String COMPANY_PROJECTS_URL_PATH = "companies/%s/projects.json";
-    private static final String STARRED_PROJECTS_URL_PATH = "projects/starred.json";
-    private static final String STAR_A_PROJECT_URL_PATH = "/projects/%s/star.json";
-    private static final String UNSTAR_A_PROJECT_URL_PATH = "/projects/%s/unstar.json";
+    static final String PROJECTS_URL_PATH = "/projects.json";
+    static final String PROJECTS_WITH_ID_URL_PATH = "/projects/%s.json";
+    static final String COMPANY_PROJECTS_URL_PATH = "/companies/%s/projects.json";
+    static final String STARRED_PROJECTS_URL_PATH = "/projects/starred.json";
+    static final String STAR_A_PROJECT_URL_PATH = "/projects/%s/star.json";
+    static final String UNSTAR_A_PROJECT_URL_PATH = "/projects/%s/unstar.json";
 
     private static final Type PROJECT_LIST_TYPE = new TypeToken<List<Project>>() {}.getType();
 
