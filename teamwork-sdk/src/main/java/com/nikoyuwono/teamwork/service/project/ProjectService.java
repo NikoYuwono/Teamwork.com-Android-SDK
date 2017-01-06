@@ -30,6 +30,9 @@ public interface ProjectService {
     void getAllProjects(@Nullable GetProjectParameter getProjectParameter, @Nullable RequestCallback<List<Project>> callback);
     Observable<List<Project>> getAllProjects(@Nullable GetProjectParameter getProjectParameter);
 
+    void getProject(@NonNull String projectId, @Nullable RequestCallback<Project> callback);
+    Observable<Project> getProject(@NonNull String projectId);
+
     void getProject(@NonNull String projectId, boolean includePeople, @Nullable RequestCallback<Project> callback);
     Observable<Project> getProject(@NonNull String projectId, boolean includePeople);
 

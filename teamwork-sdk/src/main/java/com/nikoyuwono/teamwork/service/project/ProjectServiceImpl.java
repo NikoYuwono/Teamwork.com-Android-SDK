@@ -2,6 +2,7 @@ package com.nikoyuwono.teamwork.service.project;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -71,7 +72,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void updateProject(@NonNull String projectId, @NonNull NewProject newProject, RequestCallback<Response> callback) {
+    public void updateProject(@NonNull String projectId, @NonNull NewProject newProject, @Nullable RequestCallback<Response> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .jsonBody(gson.toJson(newProject))
                 .put(new Callback() {
@@ -99,7 +100,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void deleteProject(@NonNull String projectId, RequestCallback<Response> callback) {
+    public void deleteProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .delete(new Callback() {
                     @Override
@@ -125,7 +126,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getAllProjects(RequestCallback<List<Project>> callback) {
+    public void getAllProjects(@Nullable RequestCallback<List<Project>> callback) {
         apiClient.withPath(PROJECTS_URL_PATH)
                 .get(new Callback() {
                     @Override
@@ -155,7 +156,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getAllProjects(GetProjectParameter getProjectParameter, RequestCallback<List<Project>> callback) {
+    public void getAllProjects(@Nullable GetProjectParameter getProjectParameter, @Nullable RequestCallback<List<Project>> callback) {
         createGetAllProjectsExecutor(getProjectParameter)
                 .get(new Callback() {
                     @Override
@@ -177,7 +178,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Observable<List<Project>> getAllProjects(GetProjectParameter getProjectParameter) {
+    public Observable<List<Project>> getAllProjects(@Nullable GetProjectParameter getProjectParameter) {
         return createGetAllProjectsExecutor(getProjectParameter)
                 .get()
                 .map(Util::getContent)
@@ -185,7 +186,17 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getProject(@NonNull String projectId, boolean includePeople, RequestCallback<Project> callback) {
+    public void getProject(@NonNull String projectId, @Nullable RequestCallback<Project> callback) {
+        getProject(projectId, false, callback);
+    }
+
+    @Override
+    public Observable<Project> getProject(@NonNull String projectId) {
+        return getProject(projectId, false);
+    }
+
+    @Override
+    public void getProject(@NonNull String projectId, boolean includePeople, @Nullable RequestCallback<Project> callback) {
         apiClient.withPath(projectsUrlPath(projectId))
                 .param("includePeople", includePeople)
                 .get(new Callback() {
@@ -217,7 +228,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getCompanyProjects(@NonNull String companyId, RequestCallback<List<Project>> callback) {
+    public void getCompanyProjects(@NonNull String companyId, @Nullable RequestCallback<List<Project>> callback) {
         apiClient.withPath(String.format(COMPANY_PROJECTS_URL_PATH, companyId))
                 .get(new Callback() {
                     @Override
@@ -247,7 +258,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void getStarredProjects(RequestCallback<List<Project>> callback) {
+    public void getStarredProjects(@Nullable RequestCallback<List<Project>> callback) {
         apiClient.withPath(STARRED_PROJECTS_URL_PATH)
                 .get(new Callback() {
                     @Override
@@ -277,7 +288,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void starProject(@NonNull String projectId, RequestCallback<Response> callback) {
+    public void starProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback) {
         apiClient.withPath(String.format(STAR_A_PROJECT_URL_PATH, projectId))
                 .put(new Callback() {
                     @Override
@@ -302,7 +313,7 @@ class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void unstarProject(@NonNull String projectId, RequestCallback<Response> callback) {
+    public void unstarProject(@NonNull String projectId, @Nullable RequestCallback<Response> callback) {
         apiClient.withPath(String.format(UNSTAR_A_PROJECT_URL_PATH, projectId))
                 .put(new Callback() {
                     @Override
@@ -330,7 +341,8 @@ class ProjectServiceImpl implements ProjectService {
         return String.format(PROJECTS_WITH_ID_URL_PATH, projectId);
     }
 
-    private ApiClient.Executor createGetAllProjectsExecutor(@Nullable GetProjectParameter getProjectParameter) {
+    @VisibleForTesting
+    ApiClient.Executor createGetAllProjectsExecutor(@Nullable GetProjectParameter getProjectParameter) {
         final ApiClient.Executor executor = apiClient.withPath(PROJECTS_URL_PATH);
 
         if (getProjectParameter == null) {

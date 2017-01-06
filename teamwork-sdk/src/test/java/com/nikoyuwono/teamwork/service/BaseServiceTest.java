@@ -14,20 +14,27 @@ import okhttp3.Credentials;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseServiceTest {
 
     private static final String FAKE_API_KEY = "51.924429,-8.489567";
+    private static final String AUTHORIZATION_CREDENTIAL = Credentials.basic(FAKE_API_KEY, "");
     private static OkHttpClient okHttpClient;
+    private static OkHttpClient okHttpClientWithoutAuthenticator;
     protected static Gson gson;
 
     @Rule
     public final MockWebServer mockWebServer = new MockWebServer();
     protected ApiClient apiClient;
+    protected ApiClient apiClientWithoutAuthenticator;
 
     @BeforeClass
     public static void setupOkHttpClient() {
         okHttpClient = defaultOkHttpClient();
+        okHttpClientWithoutAuthenticator = okHttpClientWithoutAuthenticator();
     }
 
     @Before
@@ -37,21 +44,39 @@ public abstract class BaseServiceTest {
                 .baseUrl(mockUrl)
                 .okHttpClient(okHttpClient)
                 .build();
+        apiClientWithoutAuthenticator = new ApiClient.Builder()
+                .baseUrl(mockUrl)
+                .okHttpClient(okHttpClientWithoutAuthenticator)
+                .build();
     }
 
     private static OkHttpClient defaultOkHttpClient() {
         return new OkHttpClient.Builder()
                 .authenticator((route, response) -> {
-                    final String credential = Credentials.basic(FAKE_API_KEY, "");
-                    if (credential.equals(response.request().header("Authorization"))) {
+                    if (AUTHORIZATION_CREDENTIAL.equals(response.request().header("Authorization"))) {
                         return null; // If we already failed with these credentials, don't retry.
                     }
                     return response.request().newBuilder()
-                            .header("Authorization", credential)
+                            .header("Authorization", AUTHORIZATION_CREDENTIAL)
                             .build();
                 })
                 .readTimeout(10000, TimeUnit.MILLISECONDS)
                 .connectTimeout(15000, TimeUnit.MILLISECONDS)
                 .build();
+    }
+
+    private static OkHttpClient okHttpClientWithoutAuthenticator() {
+        return new OkHttpClient.Builder()
+                .readTimeout(10000, TimeUnit.MILLISECONDS)
+                .connectTimeout(15000, TimeUnit.MILLISECONDS)
+                .build();
+    }
+
+    protected void assertRequestHasCorrectCredential() throws InterruptedException {
+        final RecordedRequest recordedRequest1 = mockWebServer.takeRequest();
+        assertThat(recordedRequest1.getHeader("Authorization")).isNull();
+
+        final RecordedRequest recordedRequest2 = mockWebServer.takeRequest();
+        assertThat(recordedRequest2.getHeader("Authorization")).isEqualTo(AUTHORIZATION_CREDENTIAL);
     }
 }
