@@ -109,6 +109,10 @@ public class ApiClient {
             return this;
         }
 
+        public HttpUrl getHttpUrl() {
+            return buildRequestUrlWithQueryParameter();
+        }
+
         public Observable<Response> get() {
             return execute(this.createGetRequest());
         }
@@ -152,27 +156,36 @@ public class ApiClient {
         private Request createPostRequest() {
             return new Request.Builder()
                     .url(buildRequestUrl())
-                    .post(requestBody)
+                    .post(getRequestBody())
                     .build();
         }
 
         private Request createPutRequest() {
             return new Request.Builder()
                     .url(buildRequestUrl())
-                    .put(requestBody)
+                    .put(getRequestBody())
                     .build();
         }
 
         private Request createDeleteRequest() {
             return new Request.Builder()
                     .url(buildRequestUrlWithQueryParameter())
-                    .delete(requestBody)
+                    .delete(getRequestBody())
                     .build();
         }
 
         private HttpUrl buildRequestUrl() {
             return this.urlBuilder
                     .build();
+        }
+
+        private RequestBody getRequestBody() {
+            if (requestBody != null) {
+                return requestBody;
+            } else {
+                // Return empty body if there are no RequestBody available
+                return RequestBody.create(null, new byte[0]);
+            }
         }
 
         private HttpUrl buildRequestUrlWithQueryParameter() {
