@@ -1,6 +1,7 @@
 package com.nikoyuwono.teamwork;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.nikoyuwono.teamwork.data.net.ApiClient;
 import com.nikoyuwono.teamwork.service.account.AccountRequest;
@@ -10,24 +11,23 @@ import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 
 public final class Teamwork {
+    private static final String PREFERENCE_NAME = "com.nikoyuwono.teamwork.SDK_STORE";
 
     private static ApiClient apiClient;
+    private static Context applicationContext;
 
     private Teamwork() {
-        throw new IllegalAccessError("This constructor shouldn't be called!");
+        throw new AssertionError("This constructor shouldn't be called!");
     }
 
-    public static void initialize(final Context context,
-                                  final String apiKey,
-                                  final String baseUrl) {
-        final Cache cache = createCache(context.getCacheDir());
-        final OkHttpClient okHttpClient = createOkHttpClient(cache, apiKey);
+    public static synchronized void initialize(final Context applicationContext) {
+        Teamwork.applicationContext = applicationContext.getApplicationContext();
+        final Cache cache = createCache(applicationContext.getCacheDir());
+        final OkHttpClient okHttpClient = createOkHttpClient(cache);
         apiClient = new ApiClient.Builder()
-                .host(baseUrl)
                 .okHttpClient(okHttpClient)
                 .build();
     }
@@ -37,21 +37,20 @@ public final class Teamwork {
         return new Cache(cacheDir, cacheSize);
     }
 
-    private static OkHttpClient createOkHttpClient(final Cache cache, final String apiKey) {
+    private static OkHttpClient createOkHttpClient(final Cache cache) {
         return new OkHttpClient.Builder()
-                .authenticator((route, response) -> {
-                    final String credential = Credentials.basic(apiKey, "");
-                    if (credential.equals(response.request().header("Authorization"))) {
-                        return null; // If we already failed with these credentials, don't retry.
-                    }
-                    return response.request().newBuilder()
-                            .header("Authorization", credential)
-                            .build();
-                })
                 .readTimeout(10000, TimeUnit.MILLISECONDS)
                 .connectTimeout(15000, TimeUnit.MILLISECONDS)
                 .cache(cache)
                 .build();
+    }
+
+    public static Context getApplicationContext() {
+        return applicationContext;
+    }
+
+    public static SharedPreferences getSharedPreferences() {
+        return applicationContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
     public static AccountRequest accountRequest() {

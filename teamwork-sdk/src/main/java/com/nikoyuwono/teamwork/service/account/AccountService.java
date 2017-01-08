@@ -11,6 +11,8 @@ public interface AccountService {
 
     void getAccountDetails(@Nullable RequestCallback<Account> accountCallback);
     Observable<Account> getAccountDetails();
-    void authenticate(@Nullable RequestCallback<Account> accountCallback);
-    Observable<Account> authenticate();
+    void authenticate(String apiKey, @Nullable RequestCallback<Account> accountCallback);
+    Observable<Account> authenticate(String apiKey);
+    void authenticate(String userName, String password, @Nullable RequestCallback<Account> accountCallback);
+    Observable<Account> authenticate(String userName, String password);
 }

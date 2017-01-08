@@ -49,11 +49,19 @@ public class AccountRequest extends BaseRequest<AccountService> {
         return service.getAccountDetails();
     }
 
-    public void newAuthenticateRequest(RequestCallback<Account> callback) {
-        service.authenticate(callback);
+    public void newAuthenticateRequest(String apiKey, RequestCallback<Account> callback) {
+        service.authenticate(apiKey, callback);
     }
 
-    public Observable<Account> newAuthenticateRequest() {
-        return service.authenticate();
+    public Observable<Account> newAuthenticateRequest(String apiKey) {
+        return service.authenticate(apiKey);
+    }
+
+    public void newAuthenticateRequest(String userName, String password, RequestCallback<Account> callback) {
+        service.authenticate(userName, password, callback);
+    }
+
+    public Observable<Account> newAuthenticateRequest(String userName, String password) {
+        return service.authenticate(userName, password);
     }
 }

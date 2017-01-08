@@ -1,11 +1,14 @@
 package com.nikoyuwono.teamwork.data.net;
 
+import com.nikoyuwono.teamwork.Teamwork;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -17,16 +20,14 @@ import rx.schedulers.Schedulers;
 
 public class ApiClient {
 
-    private static final String CONTENT_TYPE_FIELD_NAME = "Content-Type";
-    private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json; charset=utf-8";
+    public static final String HOST_PREFERENCE_KEY = "HOST_PREFERENCE_KEY";
+    private static final String AUTHENTICATE_HOST = "authenticate.teamworkpm.net";
 
     private final OkHttpClient okHttpClient;
-    private final String host;
     private final HttpUrl baseUrl;
 
     private ApiClient(Builder builder) {
         this.okHttpClient = builder.okHttpClient;
-        this.host = builder.host;
         this.baseUrl = builder.baseUrl;
     }
 
@@ -34,14 +35,18 @@ public class ApiClient {
         if (baseUrl != null) {
             return new Executor(this, baseUrl, path);
         } else {
+            final String host = Teamwork.getSharedPreferences().getString(HOST_PREFERENCE_KEY, null);
             return new Executor(this, host, path);
         }
+    }
+
+    public Executor usingAuthenticateHostWithPath(final String path) {
+        return new Executor(this, AUTHENTICATE_HOST, path);
     }
 
     public static final class Builder {
 
         private OkHttpClient okHttpClient;
-        private String host;
         private HttpUrl baseUrl;
 
         public ApiClient build() {
@@ -49,9 +54,6 @@ public class ApiClient {
                 throw new IllegalArgumentException("Please set an OkHttpClient in order to build an ApiClient");
             }
 
-            if (baseUrl == null && host == null) {
-                throw new IllegalArgumentException("No Base URL or Host specified, please set a Base URL or a Host");
-            }
             return new ApiClient(this);
         }
 
@@ -64,14 +66,13 @@ public class ApiClient {
             this.baseUrl = baseUrl;
             return this;
         }
-
-        public Builder host(String host) {
-            this.host = host;
-            return this;
-        }
     }
 
     public static class Executor {
+
+        private static final String CONTENT_TYPE_FIELD_NAME = "Content-Type";
+        private static final String CONTENT_TYPE_APPLICATION_JSON = "application/json; charset=utf-8";
+        private static final String AUTHORIZATION_FIELD_NAME = "Authorization";
 
         private final ApiClient apiClient;
 
@@ -79,7 +80,11 @@ public class ApiClient {
 
         private final Map<String, String> parameters = new HashMap<>();
 
+        private final Map<String, String> headers = new HashMap<>();
+
         private RequestBody requestBody;
+
+        private boolean missingHost;
 
         Executor(final ApiClient apiClient,
                  final HttpUrl httpUrl,
@@ -87,20 +92,36 @@ public class ApiClient {
             this.apiClient = apiClient;
             this.urlBuilder = httpUrl.newBuilder()
                     .encodedPath(path);
+            addDefaultHeaders();
         }
 
         Executor(final ApiClient apiClient,
-                 final String host,
+                 String host,
                  final String path) {
+            if (host == null) {
+                host = "host";
+                missingHost = true;
+            }
             this.apiClient = apiClient;
             this.urlBuilder = new HttpUrl.Builder()
                     .scheme("https")
                     .host(host)
                     .encodedPath(path);
+            addDefaultHeaders();
         }
 
         public <T> Executor param(final String key, final T value) {
             parameters.put(key, String.valueOf(value));
+            return this;
+        }
+
+        public <T> Executor header(final String key, final T value) {
+            headers.put(key, String.valueOf(value));
+            return this;
+        }
+
+        public Executor authorizationHeader(final String credential) {
+            headers.put(AUTHORIZATION_FIELD_NAME, credential);
             return this;
         }
 
@@ -148,7 +169,7 @@ public class ApiClient {
         private Request createGetRequest() {
             return new Request.Builder()
                     .url(buildRequestUrlWithQueryParameter())
-                    .addHeader(CONTENT_TYPE_FIELD_NAME, CONTENT_TYPE_APPLICATION_JSON)
+                    .headers(Headers.of(headers))
                     .get()
                     .build();
         }
@@ -156,6 +177,7 @@ public class ApiClient {
         private Request createPostRequest() {
             return new Request.Builder()
                     .url(buildRequestUrl())
+                    .headers(Headers.of(headers))
                     .post(getRequestBody())
                     .build();
         }
@@ -163,6 +185,7 @@ public class ApiClient {
         private Request createPutRequest() {
             return new Request.Builder()
                     .url(buildRequestUrl())
+                    .headers(Headers.of(headers))
                     .put(getRequestBody())
                     .build();
         }
@@ -170,6 +193,7 @@ public class ApiClient {
         private Request createDeleteRequest() {
             return new Request.Builder()
                     .url(buildRequestUrlWithQueryParameter())
+                    .headers(Headers.of(headers))
                     .delete(getRequestBody())
                     .build();
         }
@@ -197,38 +221,46 @@ public class ApiClient {
         }
 
         private Observable<Response> execute(final Request request) {
-            return Observable.<Response>create(subscriber -> {
-                try {
-                    final Response response = apiClient.okHttpClient.newCall(request).execute();
+            if (missingHost) {
+                return Observable.create(subscriber -> subscriber.onError(createUnauthorizedException()));
+            } else {
+                return Observable.<Response>create(subscriber -> {
+                    try {
+                        final Response response = apiClient.okHttpClient.newCall(request).execute();
 
-                    if (!response.isSuccessful()) {
-                        throw createExceptionFromResponse(response);
+                        if (!response.isSuccessful()) {
+                            throw createExceptionFromResponse(response);
+                        }
+
+                        subscriber.onNext(response);
+                        subscriber.onCompleted();
+                    } catch (IOException e) {
+                        subscriber.onError(e);
                     }
-
-                    subscriber.onNext(response);
-                    subscriber.onCompleted();
-                } catch (IOException e) {
-                    subscriber.onError(e);
-                }
-            }).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io());
+                }).subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io());
+            }
         }
 
         private void execute(final Request request, Callback callback) {
-            apiClient.okHttpClient.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    callback.onFailure(call, e);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        callback.onResponse(call, response);
-                    } else {
-                        callback.onFailure(call, createExceptionFromResponse(response));
+            if (missingHost) {
+                callback.onFailure(null, createUnauthorizedException());
+            } else {
+                apiClient.okHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        callback.onFailure(call, e);
                     }
-                }
-            });
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            callback.onResponse(call, response);
+                        } else {
+                            callback.onFailure(call, createExceptionFromResponse(response));
+                        }
+                    }
+                });
+            }
         }
 
         private IOException createExceptionFromResponse(Response response) {
@@ -241,12 +273,24 @@ public class ApiClient {
                     + response.request().url());
         }
 
+        private IOException createUnauthorizedException() {
+            return new IOException("Unauthorized Access! Please Authorize with calling AccountRequest.authenticate()");
+        }
+
         private boolean isClientError(int responseCode) {
             return responseCode >= 400 && responseCode < 500;
         }
 
         private boolean isServerError(int responseCode) {
             return responseCode >= 500 && responseCode < 600;
+        }
+
+        private void addDefaultHeaders() {
+            this.headers.put(CONTENT_TYPE_FIELD_NAME, CONTENT_TYPE_APPLICATION_JSON);
+            final String credential = CryptoUtils.getSavedCredential();
+            if (credential != null) {
+                this.headers.put(AUTHORIZATION_FIELD_NAME, credential);
+            }
         }
     }
 

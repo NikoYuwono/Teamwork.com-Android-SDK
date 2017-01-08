@@ -10,6 +10,8 @@ public class Project {
     private String id;
     @SerializedName("name")
     private String name;
+    @SerializedName("description")
+    private String description;
     @SerializedName("last-changed-on")
     private String lastChangedOn;
     @SerializedName("show-announcement")
@@ -40,6 +42,7 @@ public class Project {
     private Project(Builder builder) {
         setId(builder.id);
         setName(builder.name);
+        setDescription(builder.description);
         setLastChangedOn(builder.lastChangedOn);
         setShowAnnouncement(builder.showAnnouncement);
         setCreatedOn(builder.createdOn);
@@ -73,6 +76,14 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLastChangedOn() {
@@ -182,6 +193,7 @@ public class Project {
     public static final class Builder {
         private String id;
         private String name;
+        private String description;
         private String lastChangedOn;
         private boolean showAnnouncement;
         private String createdOn;
@@ -206,6 +218,11 @@ public class Project {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
             return this;
         }
 
