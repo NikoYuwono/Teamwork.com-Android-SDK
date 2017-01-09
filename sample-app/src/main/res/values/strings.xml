@@ -3,6 +3,7 @@
 
     <string name="login_api_key_input_placeholder">API Key</string>
     <string name="login_login_button_text">Login</string>
+    <string name="login_error_toast_text">Failed to login. Please check your internet connection or try again later</string>
 
     <string name="projects_loading_title">Loading Projects…</string>
     <string name="projects_load_error_title">Failed to load Projects\nPlease check your internet connection or try again later</string>

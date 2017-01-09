@@ -11,6 +11,7 @@ interface LoginContract {
 
     interface View extends BaseView {
         void launchProjectsView();
+        void showErrorToast();
     }
 
     interface Presenter extends BasePresenter {

@@ -54,7 +54,7 @@ class ProjectsPresenter implements ProjectsContract.Presenter {
 
     private void onGetError(final Throwable throwable) {
         Log.e(TAG, "Got Error " + throwable.getMessage());
-        view.showNoProject();
+        view.showErrorView();
         view.hideLoadingIndicator();
     }
 }

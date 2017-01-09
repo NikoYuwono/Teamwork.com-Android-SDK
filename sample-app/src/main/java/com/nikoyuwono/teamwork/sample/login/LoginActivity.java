@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.nikoyuwono.teamwork.sample.R;
 import com.nikoyuwono.teamwork.sample.projects.ProjectsActivity;
@@ -65,6 +66,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         final Intent intent = new Intent(this, ProjectsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void showErrorToast() {
+        Toast.makeText(this, R.string.login_error_toast_text, Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.login_button)
