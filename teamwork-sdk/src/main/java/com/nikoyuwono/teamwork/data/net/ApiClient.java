@@ -1,5 +1,7 @@
 package com.nikoyuwono.teamwork.data.net;
 
+import android.content.SharedPreferences;
+
 import com.nikoyuwono.teamwork.Teamwork;
 
 import java.io.IOException;
@@ -35,13 +37,15 @@ public class ApiClient {
         if (baseUrl != null) {
             return new Executor(this, baseUrl, path);
         } else {
-            final String host = Teamwork.getSharedPreferences().getString(HOST_PREFERENCE_KEY, null);
+            final SharedPreferences sharedPreferences = Teamwork.getSharedPreferences();
+            final String host;
+            if (sharedPreferences != null) {
+                host = sharedPreferences.getString(HOST_PREFERENCE_KEY, AUTHENTICATE_HOST);
+            } else {
+                host = AUTHENTICATE_HOST;
+            }
             return new Executor(this, host, path);
         }
-    }
-
-    public Executor usingAuthenticateHostWithPath(final String path) {
-        return new Executor(this, AUTHENTICATE_HOST, path);
     }
 
     public static final class Builder {

@@ -1,5 +1,6 @@
 package com.nikoyuwono.teamwork.service.account;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
@@ -31,7 +32,7 @@ class AccountServiceImpl implements AccountService {
     private final ApiClient apiClient;
     private final Gson gson;
 
-    public AccountServiceImpl(final ApiClient apiClient, final Gson gson) {
+    AccountServiceImpl(final ApiClient apiClient, final Gson gson) {
         this.apiClient = apiClient;
         this.gson = gson;
     }
@@ -90,7 +91,7 @@ class AccountServiceImpl implements AccountService {
     }
 
     private void createAuthenticateCall(final String credential, @Nullable final RequestCallback<Account> accountCallback) {
-        apiClient.usingAuthenticateHostWithPath(AUTHENTICATE_URL_PATH)
+        apiClient.withPath(AUTHENTICATE_URL_PATH)
                 .authorizationHeader(credential)
                 .get(new Callback() {
             @Override
@@ -113,7 +114,7 @@ class AccountServiceImpl implements AccountService {
     }
 
     private Observable<Account> createAuthenticateCall(final String credential) {
-        return apiClient.usingAuthenticateHostWithPath(AUTHENTICATE_URL_PATH)
+        return apiClient.withPath(AUTHENTICATE_URL_PATH)
                 .authorizationHeader(credential)
                 .get()
                 .map(Util::getContent)
@@ -124,13 +125,15 @@ class AccountServiceImpl implements AccountService {
                 });
     }
 
-    private void saveAccountUrlHost(Account account) {
-        String url = account.getUrl();
-        HttpUrl httpUrl = HttpUrl.parse(url);
-        Teamwork.getSharedPreferences()
-                .edit()
-                .putString(HOST_PREFERENCE_KEY, httpUrl.host())
-                .commit();
+    private void saveAccountUrlHost(final Account account) {
+        final String url = account.getUrl();
+        final HttpUrl httpUrl = HttpUrl.parse(url);
+        final SharedPreferences sharedPreferences = Teamwork.getSharedPreferences();
+        if (sharedPreferences != null) {
+            sharedPreferences.edit()
+                    .putString(HOST_PREFERENCE_KEY, httpUrl.host())
+                    .commit();
+        }
     }
 
 }

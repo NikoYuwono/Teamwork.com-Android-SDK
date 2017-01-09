@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseServiceTest {
 
-    private static final String FAKE_API_KEY = "51.924429,-8.489567";
-    private static final String AUTHORIZATION_CREDENTIAL = Credentials.basic(FAKE_API_KEY, "");
     private static OkHttpClient okHttpClient;
     private static OkHttpClient okHttpClientWithoutAuthenticator;
+    protected static final String FAKE_API_KEY = "51.924429,-8.489567";
+    protected static final String AUTHORIZATION_CREDENTIAL = Credentials.basic(FAKE_API_KEY, "");
     protected static Gson gson;
 
     @Rule

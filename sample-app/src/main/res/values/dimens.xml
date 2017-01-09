@@ -3,6 +3,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="login_teamwork_logo_size">125dp</dimen>
+    <dimen name="login_teamwork_margin_bottom">10dp</dimen>
+    <dimen name="login_api_key_input_padding">5dp</dimen>
+    <dimen name="login_api_key_input_text_size">14sp</dimen>
+    <dimen name="login_loading_hud_padding">4dp</dimen>
+
     <dimen name="project_list_item_elevation">4dp</dimen>
     <dimen name="project_list_item_margin_horizontal">10dp</dimen>
     <dimen name="project_list_item_margin_vertical">8dp</dimen>

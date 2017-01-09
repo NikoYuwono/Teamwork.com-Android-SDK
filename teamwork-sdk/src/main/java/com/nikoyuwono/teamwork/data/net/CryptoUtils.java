@@ -25,8 +25,11 @@ class CryptoUtils {
         throw new AssertionError("This class shouldn't be initialized");
     }
 
-    public static void encryptCredential(String credential) {
+    static void encryptCredential(String credential) {
         final SharedPreferences sharedPreferences = Teamwork.getSharedPreferences();
+        if (sharedPreferences == null) {
+            return;
+        }
         final RandomString randomString = new RandomString();
         final String randomKey = randomString.getRandomString(32);
         final String initVector = randomString.getRandomString(16);
@@ -40,8 +43,11 @@ class CryptoUtils {
                 .commit();
     }
 
-    public static String getSavedCredential() {
+    static String getSavedCredential() {
         final SharedPreferences sharedPreferences = Teamwork.getSharedPreferences();
+        if (sharedPreferences == null) {
+            return null;
+        }
         final String encryptedCredential = sharedPreferences.getString(CREDENTIAL_PREFERENCE_KEY, null);
         if (encryptedCredential == null) {
             return null;

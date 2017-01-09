@@ -124,12 +124,11 @@ public class AccountServiceImplTest extends BaseServiceTest {
 
     @Test
     public void authenticate_ShouldReturnAccount_WhenApiKeyIsCorrect() throws InterruptedException {
-        mockWebServer.enqueue(new MockResponse().setResponseCode(401));
         mockWebServer.enqueue(accountResponseMock);
         final AtomicReference<Account> accountReference = new AtomicReference<>();
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final AccountService accountService = new AccountServiceImpl(apiClient, gson);
-        accountService.authenticate(new RequestCallback<Account>() {
+        accountService.authenticate(FAKE_API_KEY, new RequestCallback<Account>() {
             @Override
             public void onGetContent(Account content) {
                 accountReference.set(content);
@@ -147,23 +146,24 @@ public class AccountServiceImplTest extends BaseServiceTest {
         final Account account = accountReference.get();
         assertThat(account).isNotNull();
         assertThat(account).isEqualToComparingFieldByField(createExpectedAccount());
-        assertRequestHasCorrectCredential();
+        final RecordedRequest recordedRequest = mockWebServer.takeRequest();
+        assertThat(recordedRequest.getHeader("Authorization")).isEqualTo(AUTHORIZATION_CREDENTIAL);
     }
 
     @Test
     public void authenticate_WithObservable_ShouldReturnAccount_WhenApiKeyIsCorrect() throws InterruptedException {
-        mockWebServer.enqueue(new MockResponse().setResponseCode(401));
         mockWebServer.enqueue(accountResponseMock);
 
         final TestSubscriber<Account> testSubscriber = new TestSubscriber<>();
         final AccountService accountService = new AccountServiceImpl(apiClient, gson);
-        accountService.authenticate().subscribe(testSubscriber);
+        accountService.authenticate(FAKE_API_KEY).subscribe(testSubscriber);
         testSubscriber.awaitTerminalEvent(10, TimeUnit.SECONDS);
         testSubscriber.assertValueCount(1);
 
         final Account account = testSubscriber.getOnNextEvents().get(0);
         assertThat(account).isEqualToComparingFieldByField(createExpectedAccount());
-        assertRequestHasCorrectCredential();
+        final RecordedRequest recordedRequest = mockWebServer.takeRequest();
+        assertThat(recordedRequest.getHeader("Authorization")).isEqualTo(AUTHORIZATION_CREDENTIAL);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class AccountServiceImplTest extends BaseServiceTest {
         final AtomicReference<Exception> exceptionReference = new AtomicReference<>();
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final AccountService accountService = new AccountServiceImpl(apiClientWithoutAuthenticator, gson);
-        accountService.authenticate(new RequestCallback<Account>() {
+        accountService.authenticate(FAKE_API_KEY, new RequestCallback<Account>() {
             @Override
             public void onGetContent(Account content) {
             }
@@ -195,7 +195,7 @@ public class AccountServiceImplTest extends BaseServiceTest {
         mockWebServer.enqueue(new MockResponse().setResponseCode(401));
         final TestSubscriber<Account> testSubscriber = new TestSubscriber<>();
         final AccountService accountService = new AccountServiceImpl(apiClientWithoutAuthenticator, gson);
-        accountService.authenticate().subscribe(testSubscriber);
+        accountService.authenticate(FAKE_API_KEY).subscribe(testSubscriber);
         testSubscriber.awaitTerminalEvent(10, TimeUnit.SECONDS);
         testSubscriber.assertError(IOException.class);
     }
@@ -205,7 +205,7 @@ public class AccountServiceImplTest extends BaseServiceTest {
         mockWebServer.enqueue(accountResponseMock);
         final TestSubscriber<Account> testSubscriber = new TestSubscriber<>();
         final AccountService accountService = new AccountServiceImpl(apiClient, gson);
-        accountService.authenticate().subscribe(testSubscriber);
+        accountService.authenticate(FAKE_API_KEY).subscribe(testSubscriber);
         testSubscriber.awaitTerminalEvent(10, TimeUnit.SECONDS);
 
         RecordedRequest recordedRequest = mockWebServer.takeRequest();

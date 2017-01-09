@@ -1,4 +1,4 @@
-package com.nikoyuwono.teamwork.sample;
+package com.nikoyuwono.teamwork.sample.projects;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nikoyuwono.teamwork.data.model.Project;
+import com.nikoyuwono.teamwork.sample.R;
 import com.nikoyuwono.teamwork.sample.widget.StarButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -18,12 +20,17 @@ import butterknife.ButterKnife;
  * Created by niko-yuwono on 17/01/08.
  */
 
-public class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.ViewHolder> {
+class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.ViewHolder> {
 
     private List<Project> projects;
 
-    public ProjectListAdapter(List<Project> projects) {
-        this.projects = projects;
+    ProjectListAdapter() {
+        this.projects = new ArrayList<>();
+    }
+
+    void updateProjects(final List<Project> projects) {
+        this.projects.clear();
+        this.projects.addAll(projects);
     }
 
     @Override

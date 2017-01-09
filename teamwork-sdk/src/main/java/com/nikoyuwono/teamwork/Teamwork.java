@@ -50,7 +50,11 @@ public final class Teamwork {
     }
 
     public static SharedPreferences getSharedPreferences() {
-        return applicationContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        if (applicationContext == null) {
+            return null;
+        } else {
+            return applicationContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
     }
 
     public static AccountRequest accountRequest() {

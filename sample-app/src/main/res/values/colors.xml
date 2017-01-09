@@ -6,4 +6,6 @@
 
     <color name="label_color_dark">#333333</color>
     <color name="label_color_light">#666666</color>
+    <color name="white">#ffffff</color>
+    <color name="login_background">#2C3751</color>
 </resources>
