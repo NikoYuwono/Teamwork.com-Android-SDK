@@ -127,7 +127,10 @@ class AccountServiceImpl implements AccountService {
     private void saveAccountUrlHost(Account account) {
         String url = account.getUrl();
         HttpUrl httpUrl = HttpUrl.parse(url);
-        Teamwork.getSharedPreferences().edit().putString(HOST_PREFERENCE_KEY ,httpUrl.host());
+        Teamwork.getSharedPreferences()
+                .edit()
+                .putString(HOST_PREFERENCE_KEY, httpUrl.host())
+                .commit();
     }
 
 }

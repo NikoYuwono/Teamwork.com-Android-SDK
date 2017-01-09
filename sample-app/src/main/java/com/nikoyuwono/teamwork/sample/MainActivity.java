@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         projectList.setLayoutManager(new LinearLayoutManager(this));
         Teamwork.initialize(this);
-        Teamwork.accountRequest().newAuthenticateRequest("niko.yuwono.91@gmail.com", "Teamwork2017", new RequestCallback<Account>() {
+        Teamwork.accountRequest().newAuthenticateRequest("twp_tAinFz7JhtmxhzNrXcY5MTfFj3h3", new RequestCallback<Account>() {
             @Override
             public void onGetContent(Account content) {
                 Log.i("NIKO", "Got account " + content.toString());
@@ -43,28 +43,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("NIKO", "Got error " + e.getMessage());
             }
         });
-//        Teamwork.accountRequest()
-//                .newGetAccountDetailsRequest()
-//                .subscribe(account -> {
-//                    Log.i("NIKO", "Got account " + account);
-//                });
-//        Teamwork.projectRequest().newGetAllProjectsRequest(new RequestCallback<List<Project>>() {
-//            @Override
-//            public void onGetContent(List<Project> content) {
-//            }
-//
-//            @Override
-//            public void onError(Exception e) {
-//                Log.i("NIKO", "Got error " + e.getMessage());
-//            }
-//        });
-//        Teamwork.projectRequest()
-//                .newGetAllProjectsRequest()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(projects -> {
-//                    Log.i("NIKO", "Got projects " + projects.toString());
-//                    projectListAdapter = new ProjectListAdapter(projects);
-//                    projectList.setAdapter(projectListAdapter);
-//                });
+        Teamwork.accountRequest()
+                .newAuthenticateRequest("twp_tAinFz7JhtmxhzNrXcY5MTfFj3h3")
+                .subscribe(account -> {
+                    Log.i("NIKO", "Got account " + account);
+                    getAllProject();
+                });
+    }
+
+    private void getAllProject(){
+        Teamwork.projectRequest()
+                .newGetAllProjectsRequest()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(projects -> {
+                    Log.i("NIKO", "Got projects " + projects.toString());
+                    projectListAdapter = new ProjectListAdapter(projects);
+                    projectList.setAdapter(projectListAdapter);
+                });
     }
 }

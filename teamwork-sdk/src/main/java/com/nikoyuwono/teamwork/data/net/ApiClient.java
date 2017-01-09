@@ -84,7 +84,9 @@ public class ApiClient {
 
         private RequestBody requestBody;
 
-        private boolean missingHost;
+        private boolean missingHost = false;
+
+        private boolean shouldSaveCredential = false;
 
         Executor(final ApiClient apiClient,
                  final HttpUrl httpUrl,
@@ -122,6 +124,7 @@ public class ApiClient {
 
         public Executor authorizationHeader(final String credential) {
             headers.put(AUTHORIZATION_FIELD_NAME, credential);
+            shouldSaveCredential = true;
             return this;
         }
 
@@ -232,6 +235,10 @@ public class ApiClient {
                             throw createExceptionFromResponse(response);
                         }
 
+                        if (shouldSaveCredential) {
+                            saveCredential(request.header(AUTHORIZATION_FIELD_NAME));
+                        }
+
                         subscriber.onNext(response);
                         subscriber.onCompleted();
                     } catch (IOException e) {
@@ -254,6 +261,9 @@ public class ApiClient {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         if (response.isSuccessful()) {
+                            if (shouldSaveCredential) {
+                                saveCredential(call.request().header(AUTHORIZATION_FIELD_NAME));
+                            }
                             callback.onResponse(call, response);
                         } else {
                             callback.onFailure(call, createExceptionFromResponse(response));
@@ -283,6 +293,10 @@ public class ApiClient {
 
         private boolean isServerError(int responseCode) {
             return responseCode >= 500 && responseCode < 600;
+        }
+
+        private void saveCredential(final String credential) {
+            CryptoUtils.encryptCredential(credential);
         }
 
         private void addDefaultHeaders() {

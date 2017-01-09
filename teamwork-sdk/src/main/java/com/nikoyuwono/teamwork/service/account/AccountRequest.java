@@ -31,9 +31,7 @@ public class AccountRequest extends BaseRequest<AccountService> {
             throw new IllegalStateException("Already instantiated");
         }
         this.gson = new GsonBuilder()
-                .registerTypeAdapter(Project.class, new ProjectDeserializer())
-                .registerTypeAdapter(new TypeToken<List<Project>>() {
-                }.getType(), new ProjectsDeserializer())
+                .registerTypeAdapter(Account.class, new AccountDeserializer())
                 .create();
     }
 

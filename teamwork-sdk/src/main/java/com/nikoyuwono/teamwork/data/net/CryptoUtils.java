@@ -28,7 +28,7 @@ class CryptoUtils {
     public static void encryptCredential(String credential) {
         final SharedPreferences sharedPreferences = Teamwork.getSharedPreferences();
         final RandomString randomString = new RandomString();
-        final String randomKey = randomString.getRandomString(128);
+        final String randomKey = randomString.getRandomString(32);
         final String initVector = randomString.getRandomString(16);
 
         final String encryptedCredential = encrypt(randomKey, initVector, credential);
@@ -56,14 +56,12 @@ class CryptoUtils {
     private static String encrypt(String key, String initVector, String value) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, iv);
 
             byte[] encrypted = cipher.doFinal(value.getBytes());
-            System.out.println("encrypted string: "
-                    + Base64.encodeToString(encrypted, Base64.DEFAULT));
 
             return Base64.encodeToString(encrypted, Base64.DEFAULT);
         } catch (Exception ex) {
@@ -76,10 +74,10 @@ class CryptoUtils {
     private static String decrypt(String key, String initVector, String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, iv);
 
             byte[] original = cipher.doFinal(Base64.decode(encrypted, Base64.DEFAULT));
 
